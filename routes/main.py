@@ -1,10 +1,10 @@
 routes = {
     "/" : {
-        "template" : "index.html" 
-    },
-
-    "/register-login" : {
         "template" : "register-login.html"
     },
+
+    "/chatroom" : {
+        "template" : "chatroom.html"
+    }
 }
 

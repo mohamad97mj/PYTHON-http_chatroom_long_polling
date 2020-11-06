@@ -10,18 +10,22 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <link rel="stylesheet" type="text/css" href="../public/style.css">
 
-
 </head>
 
 <body>
 <div class="my-center my-container">
-    <form class="my-form my-center">
+    <form class="my-form my-center" action="register-login" method="post">
         <div class="form-group">
-            <h4>Welcome to Mohammad chatroom</h4>
-            <h6>Enter your credential to Register or Login</h6>
+            <div class="text-center">
+                <h4>Welcome to MM Chatroom</h4>
+                <h6>Enter Your Credential to Register or Login</h6>
+            </div>
             <label for="username"></label>username<input class="form-control" id="username"/>
             <label for="password"></label>password<input class="form-control" id="password"/>
-            <button type="submit" id="submit-btn">login/register</button>
+            <div class="text-center mt-2">
+                <button type="submit" class="btn btn-success" id="submit-btn">login/register</button>
+            </div>
+
         </div>
     </form>
 </div>

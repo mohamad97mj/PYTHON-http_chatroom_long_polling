@@ -1,4 +1,4 @@
-from pm import PrivateMessage
+from entities.pm import PrivateMessage
 import datetime
 from db.main import CursorFromConnectionPool
 

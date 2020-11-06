@@ -60,7 +60,7 @@ class Chat_server(BaseHTTPRequestHandler):
             return message.post(body)
 
     def get_html(self, path):
-        if path == '' or path == 'index.html':
+        if path == '' or path == 'chatroom.html':
             return '''
             <body>
             <style>

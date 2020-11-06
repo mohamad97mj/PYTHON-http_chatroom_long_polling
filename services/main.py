@@ -1,2 +1,10 @@
 get_services = []
-post_services = ['send-message', 'poll', 'register-login']
+
+massage_post_services = [
+    'poll',
+    'send-message',
+]
+
+other_post_services = [
+    'register-login',
+]

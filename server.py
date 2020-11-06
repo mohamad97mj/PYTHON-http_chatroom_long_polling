@@ -29,7 +29,7 @@ class Server(BaseHTTPRequestHandler):
             service = self.path[1:]
         print(service)
 
-        if service in post_services:
+        if service in massage_post_services:
             res = self.perform_operation(service, body)
             if res:
                 self.send_response(200)
@@ -40,6 +40,13 @@ class Server(BaseHTTPRequestHandler):
                 self.wfile.write(res)
             else:
                 self.send_response(404)
+        elif service in other_post_services:
+            handler = ServiceHandler()
+            handler.register_login()
+            self.respond({
+                'handler' : handler
+            })
+
         else:
             self.send_response(404)
 
