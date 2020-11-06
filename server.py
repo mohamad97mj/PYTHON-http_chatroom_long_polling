@@ -44,7 +44,7 @@ class Server(BaseHTTPRequestHandler):
             handler = ServiceHandler()
             handler.register_login()
             self.respond({
-                'handler' : handler
+                'handler': handler
             })
 
         else:
@@ -64,7 +64,7 @@ class Server(BaseHTTPRequestHandler):
         if request_extension == "" or request_extension == ".html":
             if self.path in routes:
                 handler = TemplateHandler()
-                handler.find(routes[self.path])
+                handler.handle(routes[self.path])
 
             elif self.path in get_services:
                 handler = ServiceHandler()
@@ -84,12 +84,14 @@ class Server(BaseHTTPRequestHandler):
 
     def handle_http(self, handler):
         status_code = handler.getStatus()
-
         self.send_response(status_code)
 
         if status_code == 200:
             content = handler.getContents()
             self.send_header('Content-type', handler.getContentType())
+        elif status_code == 301:
+            self.send_header('Location', 'http://localhost:8000/chatroom')
+            content = "301 Redirect"
         else:
             content = "404 Not Found"
 

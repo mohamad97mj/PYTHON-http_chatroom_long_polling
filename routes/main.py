@@ -1,10 +1,4 @@
 routes = {
-    "/" : {
-        "template" : "register-login.html"
-    },
-
-    "/chatroom" : {
-        "template" : "chatroom.html"
-    }
+    "/": "register-login.html",
+    "/chatroom": "chatroom.html",
 }
-

@@ -9,12 +9,17 @@ class TemplateHandler(RequestHandler):
     def getContents(self):
         return self.contents.read()
 
-    def find(self, routeData):
+    def find(self, path):
         try:
-            template_file = open('templates/{}'.format(routeData['template']))
-            self.contents = template_file
-            self.setStatus(200)
-            return True
+            template_file = open('templates/{}'.format(path))
+            return template_file
         except:
+            return None
+
+    def handle(self, path):
+        return_template = self.find(path)
+        if return_template:
+            self.contents = return_template
+            self.setStatus(200)
+        else:
             self.setStatus(404)
-            return False

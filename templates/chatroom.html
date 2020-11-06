@@ -18,15 +18,20 @@
 
 </head>
 <body>
-<form>
-    <div class="form-group">
-        <h1></h1>
-        <label for="receiver"></label><input class="form-control" id="receiver"/>
-        <label for="message"></label><input class="form-control" id="message"/>
-        <div id="message-box">hello</div>
+<div class="my-center my-container">
+    <form class="my-form my-center">
+        <div class="form-group">
+            <h1></h1>
+            <label for="receiver">destination username</label><input class="form-control" id="receiver"/>
+            <label for="message">message</label>
+            <textarea id="message" class="form-control" rows="1" oninput="auto_grow(this)"></textarea>
+            <div id="message-box" class="border mt-2"></div>
+        </div>
+    </form>
+    <div class="text-center">
+        <button id="send-message-btn">send</button>
     </div>
-</form>
-<button id="send-message-btn">send</button>
+</div>
 <script>
     $('#send-message-btn').click(function () {
         $.ajax('/send-message', {
@@ -41,7 +46,7 @@
             method: 'POST',
             timeout: 1000 * 60 * 10, //10 minutes
             success: function (data) {
-                $("<p>" + data + "</p>").appendTo($(document.body));
+                $("<p>" + data + "</p>").appendTo($('#message-box'));
                 last_message = data;
                 poll();
             },
@@ -54,9 +59,11 @@
 
 </script>
 
-
 <script>
-
+    function auto_grow(element) {
+        element.style.height = "5px";
+        element.style.height = (element.scrollHeight) + "px";
+    }
 </script>
 </body>
 </html>
