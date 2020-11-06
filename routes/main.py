@@ -3,12 +3,8 @@ routes = {
         "template" : "index.html" 
     },
 
-    "/goodbye" : {
-        "template" : "goodbye.html"
+    "/register-login" : {
+        "template" : "register-login.html"
     },
-
-    "/login": {
-        "template" : 'login.html'
-    }
 }
 

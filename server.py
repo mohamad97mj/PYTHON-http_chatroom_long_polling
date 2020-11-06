@@ -8,6 +8,7 @@ from services.main import *
 from response.templateHandler import TemplateHandler
 from response.badRequestHandler import BadRequestHandler
 from response.serviceHandler import ServiceHandler
+from response.staticHandler import StaticHandler
 from response.message import Message
 
 message = Message()
@@ -63,8 +64,12 @@ class Server(BaseHTTPRequestHandler):
                 handler.test()
             else:
                 handler = BadRequestHandler()
-        else:
+
+        elif request_extension == ".py":
             handler = BadRequestHandler()
+        else:
+            handler = StaticHandler()
+            handler.find(self.path)
 
         self.respond({
             'handler': handler
