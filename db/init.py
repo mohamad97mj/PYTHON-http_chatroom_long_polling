@@ -19,6 +19,7 @@ def create_user_table(connection_info):
     cursor.execute(sql.SQL(
         """CREATE TABLE chatroom.public.user(
         username character(255) NOT NULL,
+        password character(255) NOT NULL,
         CONSTRAINT username_pkey PRIMARY KEY (username))"""
     ))
     close_connection(connection, cursor)
@@ -30,7 +31,9 @@ def create_pm_table(connection_info):
     cursor.execute(sql.SQL(
         """CREATE TABLE chatroom.public.pm(
         id integer SERIAL NOT NULL,
-        
+        src character(255) NOT NULL,
+        content character (255),   
+        date date,
         CONSTRAINT id_pkey PRIMARY KEY (id))"""
     ))
     close_connection(connection, cursor)
