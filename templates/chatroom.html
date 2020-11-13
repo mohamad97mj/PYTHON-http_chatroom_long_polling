@@ -21,23 +21,26 @@
 <div class="my-center my-container">
     <form class="my-form my-center">
         <div class="form-group">
-            <h1></h1>
-            <label for="receiver">destination username</label><input class="form-control" id="receiver"/>
-            <label for="message">message</label>
+            <h6>logged in as <strong id="src"></strong></h6>
+            <label for="message">message:</label>
             <textarea id="message" class="form-control" rows="1" oninput="auto_grow(this)"></textarea>
             <div id="message-box" class="border mt-2"></div>
         </div>
     </form>
     <div class="text-center">
-        <button id="send-message-btn">send</button>
+        <button id="send-message-btn" class="btn btn-success">send</button>
     </div>
 </div>
 <script>
     $('#send-message-btn').click(function () {
+        var src = $('#src').text()
+        var message = $('#message').val()
+        var body = "{" + '"src":' + '"' + src + '"' + ',' + '"message":' + '"' + message + '"' + "}"
+        alert(body)
         $.ajax('/send-message', {
             method: 'POST',
             timeout: 100000000000,
-            data: $('#message').val(),
+            data: body,
         });
     });
     var last_message = '';
@@ -60,10 +63,37 @@
 </script>
 
 <script>
+    function getCookie(cname) {
+        var name = cname + "=";
+        var decodedCookie = decodeURIComponent(document.cookie);
+        var ca = decodedCookie.split(';');
+        for (var i = 0; i < ca.length; i++) {
+            var c = ca[i];
+            while (c.charAt(0) == ' ') {
+                c = c.substring(1);
+            }
+            if (c.indexOf(name) == 0) {
+                return c.substring(name.length, c.length);
+            }
+        }
+        return "";
+    }
+
+</script>
+
+<script>
     function auto_grow(element) {
         element.style.height = "5px";
         element.style.height = (element.scrollHeight) + "px";
     }
 </script>
+
+<script>
+    $(document).ready(function () {
+        var cookie = getCookie('username')
+        $('#src').text(cookie)
+    });
+</script>
+
 </body>
 </html>

@@ -25,9 +25,13 @@ textarea {
     max-height: 100px;
 }
 
-#message-box{
+#message-box {
     min-height: 300px;
     max-height: 300px;
     overflow: auto;
     padding: 15px;
+}
+
+#message {
+    overflow: auto;
 }
