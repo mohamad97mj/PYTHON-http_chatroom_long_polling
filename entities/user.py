@@ -31,14 +31,16 @@ class User:
     def save_to_db(self):
         # This is creating a new connection pool every time! Very expensive...
         with CursorFromConnectionPool() as cursor:
-            cursor.execute('INSERT INTO user (username) VALUES (%s)', (self.username,))
+            cursor.execute('INSERT INTO public.user (username, password) VALUES (%s, %s)', (self.username, self.password))
 
     @classmethod
     def load_from_db_by_username(cls, username):
         with CursorFromConnectionPool() as cursor:
             # Note the (email,) to make it a tuple!
-            cursor.execute('SELECT * FROM user WHERE username=%s', (username,))
+            cursor.execute('SELECT * FROM public.user WHERE username=%s', (username,))
             user_data = cursor.fetchone()
-            return cls(username=user_data[0])
-
+            if user_data:
+                return cls(username=user_data[0])
+            else:
+                return None
 

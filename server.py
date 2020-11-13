@@ -8,11 +8,13 @@ from response.templateHandler import TemplateHandler
 from response.badRequestHandler import BadRequestHandler
 from response.serviceHandler import ServiceHandler
 from response.staticHandler import StaticHandler
+from response.notAllowedRequestHandler import NotAllowedRequestHandler
 from response.message import Message
 import json
 from http.cookies import SimpleCookie
 import datetime
 from entities.dbmessage import DBMessage
+from auth.main import *
 
 message = Message()
 
@@ -24,13 +26,13 @@ class Server(BaseHTTPRequestHandler):
     def do_HEAD(self):
         return
 
-    def do_POST(self):
+    @auth_required
+    def do_POST(self, **kwargs):
         length = int(self.headers['Content-Length'])
         body = self.rfile.read(length).decode('utf-8')
         service = None
         if self.path.startswith('/'):
             service = self.path[1:]
-        print(service)
 
         if service in massage_post_services:
             res = self.perform_operation(service, body)
@@ -69,26 +71,30 @@ class Server(BaseHTTPRequestHandler):
         elif service == 'load':
             return self.load_messages()
 
-    def do_GET(self):
+    @auth_required
+    def do_GET(self, **kwargs):
         split_path = os.path.splitext(self.path)
         request_extension = split_path[1]
 
-        if request_extension == "" or request_extension == ".html":
-            if self.path in routes:
-                handler = TemplateHandler()
-                handler.handle(routes[self.path])
-
-            elif self.path in get_services:
-                handler = ServiceHandler()
-                handler.test()
-            else:
-                handler = BadRequestHandler()
-
-        elif request_extension == ".py":
-            handler = BadRequestHandler()
+        if kwargs['not_allowed']:
+            handler = NotAllowedRequestHandler()
         else:
-            handler = StaticHandler()
-            handler.find(self.path)
+            if request_extension == "" or request_extension == ".html":
+                if self.path in routes:
+                    handler = TemplateHandler()
+                    handler.handle(routes[self.path])
+
+                elif self.path in get_services:
+                    handler = ServiceHandler()
+                    handler.test()
+                else:
+                    handler = BadRequestHandler()
+
+            elif request_extension == ".py":
+                handler = BadRequestHandler()
+            else:
+                handler = StaticHandler()
+                handler.find(self.path)
 
         self.respond(self.handle_http(handler))
 
@@ -100,9 +106,16 @@ class Server(BaseHTTPRequestHandler):
             self.send_header('Content-type', handler.getContentType())
             content = handler.getContents()
         elif status_code == 301:
-            self.set_cookie({'username': handler.username})
+            self.set_cookie({
+                'user-token': handler.token,
+                'username': handler.username,
+            })
             self.send_header('Location', 'http://localhost:8000/chatroom')
             content = "301 Redirect"
+        elif status_code == 401:
+            content = "401 Unauthorized"
+        elif status_code == 403:
+            content = "403 Forbidden"
         else:
             content = "404 Not Found"
 
@@ -124,14 +137,14 @@ class Server(BaseHTTPRequestHandler):
             self.send_header("Set-Cookie", c.OutputString())
 
     def normalize_message(self, message):
-        return message['src'] + ':' + message['content']
+        return message['src'] + ' said: ' + message['content']
 
     def load_messages(self):
         messages = DBMessage.load_all_from_db()
-        normalized_messages=''
-        for message in messages:
+        normalized_messages = ''
+        for message in messages[:len(messages)-1]:
             normalized_messages += self.normalize_message(message.to_dict()) + '<br/>'
-        return normalized_messages
+        return normalized_messages or "admin said: enjoy chatting"
 
     def save_message(self):
         now = datetime.datetime.now()

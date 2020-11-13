@@ -1,5 +1,5 @@
 from psycopg2 import pool
-# from . import init
+from . import init
 
 
 class Database:

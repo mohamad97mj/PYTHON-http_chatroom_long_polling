@@ -11,6 +11,7 @@ def create_db(connection_info, new_db_name):
         "CREATE DATABASE {}"
     ).format(sql.Identifier(new_db_name)))
     close_connection(connection, cursor)
+    print("chatroom data base created")
 
 
 def create_user_table(connection_info):
@@ -23,6 +24,7 @@ def create_user_table(connection_info):
         CONSTRAINT username_pkey PRIMARY KEY (username))"""
     ))
     close_connection(connection, cursor)
+    print("user table created")
 
 
 def create_message_table(connection_info):
@@ -38,6 +40,7 @@ def create_message_table(connection_info):
         CONSTRAINT id_pkey PRIMARY KEY (id))"""
     ))
     close_connection(connection, cursor)
+    print("message table created")
 
 
 def create_connection(connection_info):
@@ -49,13 +52,13 @@ def create_connection(connection_info):
                    port=connection_info['port'])
 
     # object type: psycopg2.extensions.connection
-    print("\ntype(conn):", type(conn))
+    # print("\ntype(conn):", type(conn))
 
     # string for the new database name to be created
 
     # get the isolation leve for autocommit
     autocommit = extensions.ISOLATION_LEVEL_AUTOCOMMIT
-    print("ISOLATION_LEVEL_AUTOCOMMIT:", extensions.ISOLATION_LEVEL_AUTOCOMMIT)
+    # print("ISOLATION_LEVEL_AUTOCOMMIT:", extensions.ISOLATION_LEVEL_AUTOCOMMIT)
 
     """
     ISOLATION LEVELS for psycopg2
