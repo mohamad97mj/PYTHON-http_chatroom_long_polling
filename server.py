@@ -11,6 +11,7 @@ from response.staticHandler import StaticHandler
 from response.message import Message
 import json
 from http.cookies import SimpleCookie
+import datetime
 
 message = Message()
 
@@ -59,7 +60,11 @@ class Server(BaseHTTPRequestHandler):
         if service == 'poll':
             return message.wait(body)
         elif service == 'send-message':
-            return message.post(body)
+            body = json.loads(body)
+            data = body['src'] + ':' + body['message']
+            return message.post(data)
+        elif service == 'load':
+            return self.load_messages()
 
     def do_GET(self):
         split_path = os.path.splitext(self.path)
@@ -114,3 +119,9 @@ class Server(BaseHTTPRequestHandler):
             cookie[k] = v
         for c in cookie.values():
             self.send_header("Set-Cookie", c.OutputString())
+
+    def load_messages(self):
+        return "hello"
+
+    def save_message(self):
+        now = datetime.datetime.now()

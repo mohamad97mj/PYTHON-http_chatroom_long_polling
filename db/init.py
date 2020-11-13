@@ -25,14 +25,14 @@ def create_user_table(connection_info):
     close_connection(connection, cursor)
 
 
-def create_pm_table(connection_info):
+def create_message_table(connection_info):
     connection, cursor = create_connection(connection_info)
 
     cursor.execute(sql.SQL(
-        """CREATE TABLE chatroom.public.pm(
-        id integer SERIAL NOT NULL,
+        """CREATE TABLE chatroom.public.message(
+        id SERIAL NOT NULL,
         src character(255) NOT NULL,
-        content character (255),   
+        content character(255),   
         date date,
         CONSTRAINT id_pkey PRIMARY KEY (id))"""
     ))
@@ -91,6 +91,14 @@ create_db(
 
 create_user_table(
     {
+        'host': "localhost",
+        'dbname': "chatroom",
+        'user': "admin",
+        'password': "admin",
+        'port': 6000,
+    })
+
+create_message_table({
         'host': "localhost",
         'dbname': "chatroom",
         'user': "admin",

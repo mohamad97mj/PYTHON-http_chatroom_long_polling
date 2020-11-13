@@ -1,4 +1,4 @@
-from entities.pm import PrivateMessage
+from entities.dbmessage import DBMessage
 import datetime
 from db.main import CursorFromConnectionPool
 import hashlib
@@ -23,7 +23,7 @@ class User:
         self.message.append(new_pm)
 
     def send_pm(self, dst_username, content):
-        new_pm = PrivateMessage(self.username, dst_username, content, datetime.datetime.now())
+        new_pm = DBMessage(self.username, dst_username, content, datetime.datetime.now())
         self.pms.append(new_pm)
         User.load_from_db_by_username(dst_username).receive_pm(new_pm)
         new_pm.save_to_db()

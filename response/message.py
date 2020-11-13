@@ -1,6 +1,5 @@
 import time
 import threading
-import json
 
 
 class Message:
@@ -20,8 +19,7 @@ class Message:
         return self.data
 
     def post(self, data):
-        data = json.loads(data)
-        data = data['src'] + ':' + data['message']
+
         with self.lock:
             self.data = data
             self.time = time.time()

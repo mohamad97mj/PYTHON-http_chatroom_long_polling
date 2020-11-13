@@ -2,7 +2,7 @@ import datetime
 from db.main import CursorFromConnectionPool
 
 
-class PrivateMessage:
+class DBMessage:
     def __init__(self, src, content, date, id=None, chatroom="default"):
         self.id = id
         self.chatroom = chatroom
@@ -29,12 +29,12 @@ class PrivateMessage:
     def load_all_from_db(cls):
         with CursorFromConnectionPool() as cursor:
             # Note the (email,) to make it a tuple!
-            cursor.execute('SELECT * FROM pm')
+            cursor.execute('SELECT * FROM message')
             fetched_pms = []
             pms_data = cursor.fetchall()
             for pm_data in pms_data:
                 fetched_pms.append(
-                    PrivateMessage(
+                    DBMessage(
                         id=pm_data[0],
                         chatroom=pm_data[1],
                         src=pm_data[2],

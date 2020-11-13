@@ -32,6 +32,23 @@
     </div>
 </div>
 <script>
+    (function load() {
+        console.log("in load")
+        var last_messages = ''
+        $.ajax('/load', {
+            method: 'POST',
+            timeout: 1000 * 60 * 10, //10 minutes
+            success: function (data) {
+                $("<p>" + data + "</p>").appendTo($('#message-box'));
+                last_messages = data;
+            },
+            error: function () {
+                setTimeout(load, 1000);
+            },
+            data: last_messages
+        });
+    }());
+
     $('#send-message-btn').click(function () {
         var src = $('#src').text()
         var message = $('#message').val()
@@ -48,6 +65,7 @@
         $.ajax('/poll', {
             method: 'POST',
             timeout: 1000 * 60 * 10, //10 minutes
+            data: last_message,
             success: function (data) {
                 $("<p>" + data + "</p>").appendTo($('#message-box'));
                 last_message = data;
@@ -56,9 +74,9 @@
             error: function () {
                 setTimeout(poll, 1000);
             },
-            data: last_message
         });
     }());
+
 
 </script>
 
