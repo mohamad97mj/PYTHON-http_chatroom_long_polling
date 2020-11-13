@@ -31,9 +31,10 @@ def create_message_table(connection_info):
     cursor.execute(sql.SQL(
         """CREATE TABLE chatroom.public.message(
         id SERIAL NOT NULL,
+        chatroom character (255) NOT NULL,
         src character(255) NOT NULL,
         content character(255),   
-        date date,
+        date timestamp,
         CONSTRAINT id_pkey PRIMARY KEY (id))"""
     ))
     close_connection(connection, cursor)

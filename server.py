@@ -12,6 +12,7 @@ from response.message import Message
 import json
 from http.cookies import SimpleCookie
 import datetime
+from entities.dbmessage import DBMessage
 
 message = Message()
 
@@ -61,7 +62,9 @@ class Server(BaseHTTPRequestHandler):
             return message.wait(body)
         elif service == 'send-message':
             body = json.loads(body)
-            data = body['src'] + ':' + body['message']
+            data = self.normalize_message(body)
+            dbmesssage = DBMessage(body['src'], body['content'], datetime.datetime.now())
+            dbmesssage.save_to_db()
             return message.post(data)
         elif service == 'load':
             return self.load_messages()
@@ -120,8 +123,15 @@ class Server(BaseHTTPRequestHandler):
         for c in cookie.values():
             self.send_header("Set-Cookie", c.OutputString())
 
+    def normalize_message(self, message):
+        return message['src'] + ':' + message['content']
+
     def load_messages(self):
-        return "hello"
+        messages = DBMessage.load_all_from_db()
+        normalized_messages=''
+        for message in messages:
+            normalized_messages += self.normalize_message(message.to_dict()) + '<br/>'
+        return normalized_messages
 
     def save_message(self):
         now = datetime.datetime.now()

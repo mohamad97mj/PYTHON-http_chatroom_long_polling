@@ -22,7 +22,7 @@ class DBMessage:
     def save_to_db(self):
         # This is creating a new connection pool every time! Very expensive...
         with CursorFromConnectionPool() as cursor:
-            cursor.execute('INSERT INTO pm (chatroom, src, content, date) VALUES (%s, %s, %s, %s)',
+            cursor.execute('INSERT INTO message (chatroom, src, content, date) VALUES (%s, %s, %s, %s)',
                            (self.chatroom, self.src, self.content, self.date))
 
     @classmethod
@@ -40,6 +40,15 @@ class DBMessage:
                         src=pm_data[2],
                         content=pm_data[3],
                         date=pm_data[4],
-                ))
+                    ))
 
             return fetched_pms
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'src': self.src,
+            'chatroom': self.chatroom,
+            'content': self.content,
+            'date': self.date,
+        }

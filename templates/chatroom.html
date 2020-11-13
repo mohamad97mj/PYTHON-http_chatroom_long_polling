@@ -39,7 +39,7 @@
             method: 'POST',
             timeout: 1000 * 60 * 10, //10 minutes
             success: function (data) {
-                $("<p>" + data + "</p>").appendTo($('#message-box'));
+                $("<span class='override-bootstrap'>" + data + "</span>").appendTo($('#message-box'));
                 last_messages = data;
             },
             error: function () {
@@ -52,7 +52,7 @@
     $('#send-message-btn').click(function () {
         var src = $('#src').text()
         var message = $('#message').val()
-        var body = "{" + '"src":' + '"' + src + '"' + ',' + '"message":' + '"' + message + '"' + "}"
+        var body = "{" + '"src":' + '"' + src + '"' + ',' + '"content":' + '"' + message + '"' + "}"
         alert(body)
         $.ajax('/send-message', {
             method: 'POST',
@@ -67,7 +67,7 @@
             timeout: 1000 * 60 * 10, //10 minutes
             data: last_message,
             success: function (data) {
-                $("<p>" + data + "</p>").appendTo($('#message-box'));
+                $("<p class='override-bootstrap'>" + data + "</p>").appendTo($('#message-box'));
                 last_message = data;
                 poll();
             },
